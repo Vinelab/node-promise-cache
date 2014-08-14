@@ -1,3 +1,5 @@
+![Travis-CI Status](https://travis-ci.org/Vinelab/node-promise-cache.svg?branch=master)
+
 # Promise Cache
 
 A promise-based cache store that preserves stored data types and is easily expandable with custom cache stores. Redis is supported out of the box.
