@@ -1,0 +1,16 @@
+language: node_js
+node_js:
+- '0.11'
+- '0.10'
+- '0.8'
+
+services:
+    - redis-server
+
+script:
+    - npm run-script spec
+    - npm run-script test
+
+notifications:
+  slack:
+    secure: Nn/heHk7wEJ4FIeXVZ8RSA8lsS9nf1tTM3x6Ulsp4vPcoyVkoBRwd5DvFRlAYGU7xorLqtLs2jTFZVkOwFPcPjHi9S8T3f75pjMH+amtg7jvR+ehkXJ55l1NlXerW6AVgD4GJFdGc9lX9ZXonXJ0S13AiqiYH9a+Ty8mJkfgfv4=
