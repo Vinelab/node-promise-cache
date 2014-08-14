@@ -1,0 +1,34 @@
+{
+  "name": "promise-cache",
+  "version": "0.1.0",
+  "description": "A caching tool that can easily be expanded with different cache stores and is preserves data-types.",
+  "main": "index.js",
+  "scripts": {
+    "spec": "./node_modules/.bin/jasmine-node --coffee spec --verbose",
+    "test": "./node_modules/.bin/jasmine-node --coffee test --verbose"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vinelab/node-promise-cache"
+  },
+  "keywords": [
+    "cache",
+    "promise",
+    "redis"
+  ],
+  "author": "Abed Halawi <abed.halawi@vinelab.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Vinelab/node-promise-cache/issues"
+  },
+  "homepage": "https://github.com/Vinelab/node-promise-cache",
+  "dependencies": {
+        "q": "~1.0.1",
+        "extend": "~1.3.0",
+        "sol-redis-pool": "~0.2.0"
+  },
+  "devDependencies": {
+    "jasmine-node": "~2.0.0",
+    "coffee-script": "~1.7.1"
+  }
+}
