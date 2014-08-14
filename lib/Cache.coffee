@@ -13,10 +13,10 @@ class Cache
         @default_ttl = 1
 
     ###*
-     * Get the cache key.
-     *
-     * @param {mixed} key
-     * @return string
+     # Get the cache key.
+     #
+     # @param {mixed} key
+     # @return string
     ###
     getCacheKey: (key)=>
         return "#{@prefix}:#{key}" if typeof key is 'string'
@@ -26,7 +26,7 @@ class Cache
         return "#{@prefix}:#{hash}"
 
     ###
-    # Store an item in the cache for a given number of minutes.
+    # Store an item in the cache for a given number of seconds.
     #
     # @param {mixed} key
     # @param {mixed} value

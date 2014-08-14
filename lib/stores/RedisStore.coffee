@@ -112,7 +112,7 @@ class Store
             cb(err, result) if typeof cb is 'function'
 
     ###
-    # Increment the integer value of a key by @count.
+    # Increment the integer value of a key by @count. Default is 1.
     #
     # @param {string} key
     # @param {int} count
@@ -125,6 +125,13 @@ class Store
             @pool.release(conn)
             cb(err, result) if typeof cb is 'function'
 
+    ###
+    # Decrement the integer value of a key by @count. Default is 1.
+    #
+    # @param {string} key
+    # @param {int} count
+    # @param {funciton} cb
+    ###
     decrement: (key, count, cb)-> @connect (err, conn)=>
         return cb(err) if err
 
@@ -145,7 +152,7 @@ module.exports.instance = (pool, config = {})->
         redis:
             host: '127.0.0.1',
             port: 6379
-            pool: {max: 1, min: 2}
+            pool: {max: 1, min: 1}
     }, config)
 
     # Create the redis pool.
