@@ -69,14 +69,26 @@ This package uses [redis-pool](https://www.npmjs.org/package/sol-redis-pool) to 
 
 ```javascript
 Cache = require('promise-cache').create({
-   redis: {
+    prefix: 'pcache',
+    ttl: 60,
+    redis: {
         host: '127.0.0.1',
         port: 6379,
         pool:{
             max: 1,
             min: 1
         }
-   }
+    }
+});
+```
+
+You may also have different instances connected to different stores.
+
+```javascript
+LocalCache = require('promise-cache').create();
+
+CentralCache = require('promise-cache').create({
+    redis: {host: '192.168.53.69'}
 });
 ```
 
@@ -329,5 +341,6 @@ The tests for this package are divided into two. One in `spec/` and the other is
 - Running specs: `npm run-script spec`
 - Running tests:
     - Make sure to have a Redis instance running if you're using the default store. i.e. `docker run -d -p 6379:6379 redis`
+    - if configuration is needed set it up in `test/config.coffee`
     - `npm run-script test`
 
