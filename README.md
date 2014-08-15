@@ -8,7 +8,7 @@ A promise-based cache store that preserves stored data types and is easily expan
 
 ## Installation
 
-`npm install promise-http`
+`npm install promise-cache`
 
 ## Usage
 

@@ -1,6 +1,6 @@
 {
   "name": "promise-cache",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "A caching tool that can easily be expanded with different cache stores and is preserves data-types.",
   "main": "index.js",
   "scripts": {
