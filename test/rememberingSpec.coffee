@@ -1,5 +1,5 @@
 q = require 'q'
-cache = require('../lib/Cache').create()
+cache = require('../lib/Cache').create(require('./config'))
 
 describe 'Remembering', ->
 
