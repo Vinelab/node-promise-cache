@@ -83,8 +83,8 @@ describe 'Cache', ->
 
         expect(Q.defer).toHaveBeenCalled()
         expect(Q.resolve).toHaveBeenCalledWith('OK')
-        expect(Manager.setFor).toHaveBeenCalledWith(Cache.getCacheKey('key'), mapped, 1, jasmine.any(Function))
-        expect(Manager.stuff.ttl).toBe 1
+        expect(Manager.setFor).toHaveBeenCalledWith(Cache.getCacheKey('key'), mapped, 60, jasmine.any(Function))
+        expect(Manager.stuff.ttl).toBe(60)
 
     it 'maps and stores "string" data in the cache forever', ->
         data = 'some data'

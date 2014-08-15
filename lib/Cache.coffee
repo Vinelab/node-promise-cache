@@ -8,9 +8,9 @@ class Cache
     # @param {object} Crypto node's crypto module
     # @return Cache
     ###
-    constructor: (@Q, @Manager, @Crypto)->
-        @prefix = 'pcache'
-        @default_ttl = 1
+    constructor: (@Q, @Manager, @Crypto, config)->
+        @prefix = if config? and config?.prefix? then config.prefix else 'pcache'
+        @default_ttl = if config? and config?.ttl? then config.ttl else 60
 
     ###*
      # Get the cache key.
@@ -228,4 +228,4 @@ module.exports.create = (config)->
     Crypto = require 'crypto'
     Manager = if config? and config?.store? then store else require('./stores/RedisStore').instance(null, config)
 
-    return new Cache(Q, Manager, Crypto)
+    return new Cache(Q, Manager, Crypto, config)
