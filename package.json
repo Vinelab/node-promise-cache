@@ -23,7 +23,7 @@
   },
   "homepage": "https://github.com/Vinelab/node-promise-cache",
   "dependencies": {
-        "q": "~1.0.1",
+        "q": "~2.0.2",
         "extend": "~1.3.0",
         "sol-redis-pool": "~0.2.0"
   },
