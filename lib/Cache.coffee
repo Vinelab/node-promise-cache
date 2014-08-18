@@ -78,8 +78,7 @@ class Cache
 
         @has(key).then (stored)=>
             if not stored
-                data = closure()
-                @put(key, data, ttl).then -> dfd.resolve(data)
+                closure (data)=> @put(key, data, ttl).then -> dfd.resolve(data)
             else @get(key).then (value)-> dfd.resolve(value)
 
         return dfd.promise
@@ -96,8 +95,7 @@ class Cache
 
         @has(key).then (stored)=>
             if not stored
-                data = closure()
-                @forever(key, data).then -> dfd.resolve(data)
+                closure (data)=> @forever(key, data).then -> dfd.resolve(data)
             else @get(key).then (value)-> dfd.resolve(value)
 
         return dfd.promise
