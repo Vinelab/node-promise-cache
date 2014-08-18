@@ -67,20 +67,20 @@ class Cache
         return dfd.promise
 
     ###*
-     * Get an item from cache if it exists,
-     * otherwise execute and get the value from the promise.
-     *
-     * @param {mixed} key
-     * @param {Q.promise}
+    # Get an item from cache if it exists,
+    #    otherwise call `closure` and store the results.
+    #
+    # @param {mixed} key
+    # @param {function} closure
     ###
-    remember: (key, ttl, promise)->
+    remember: (key, ttl, closure)->
         dfd = @Q.defer()
 
-        @get(key).then (stored)=>
+        @has(key).then (stored)=>
             if not stored
-                promise.then (data)=>
-                    @put(key, data, ttl).then -> dfd.resolve(data)
-            else dfd.resolve(stored)
+                data = closure()
+                @put(key, data, ttl).then -> dfd.resolve(data)
+            else @get(key).then (value)-> dfd.resolve(value)
 
         return dfd.promise
 
@@ -89,17 +89,16 @@ class Cache
     # or store the resulting value from the promise.
     #
     # @param {mixed} key
-    # @param {Q.promise}
+    # @param {function} closure
     ###
-    rememberForever: (key, promise)->
+    rememberForever: (key, closure)->
         dfd = @Q.defer()
 
-        @get(key).then (stored)=>
+        @has(key).then (stored)=>
             if not stored
-                promise.then (data)=>
-                    @forever(key, data)
-                    dfd.resolve(data)
-            else dfd.resolve(stored)
+                data = closure()
+                @forever(key, data).then -> dfd.resolve(data)
+            else @get(key).then (value)-> dfd.resolve(value)
 
         return dfd.promise
 

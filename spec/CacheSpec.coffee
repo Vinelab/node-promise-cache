@@ -4,7 +4,9 @@ describe 'Cache', ->
         defer: -> return this
         reject: -> return this
         resolve: -> return this
-        promise: -> return P
+        promise: {
+            then: (callback)-> callback()
+        }
     }
 
     Crypto = {
@@ -190,67 +192,58 @@ describe 'Cache', ->
         expect(Cache.get('key')).toBe(Q.promise)
         expect(Q.reject).toHaveBeenCalledWith(new Error('something happened'))
 
-    it 'remembers executed code to be returned from cache when available, otherwise hold the promise and store the result', ->
-        # execute first time assuming no data is stored (Q.promise.then returns null)
-        Q.promise = {then: (callback)-> callback(null)}
+    it 'remembers executed code to be returned from cache when available', ->
+        Closure = first: -> 'data'
+
+        spyOn(Closure, 'first').and.callThrough()
+        spyOn(Cache, 'get').and.callThrough()
+        spyOn(Cache, 'has').and.callThrough()
+        spyOn(Cache, 'put').and.callThrough()
         spyOn(Q.promise, 'then').and.callThrough()
 
-        p = {then: (callback)-> callback('data')}
-        spyOn(p, 'then').and.callThrough()
-
-        spyOn(Cache, 'get').and.callThrough()
-        spyOn(Cache, 'put').and.callThrough()
-
-        Cache.remember('key', 10, p)
+        Cache.remember('key', 10, Closure.first)
 
         expect(Q.defer).toHaveBeenCalled()
-        expect(Cache.get).toHaveBeenCalledWith('key')
+        expect(Cache.has).toHaveBeenCalledWith('key')
         expect(Q.promise.then).toHaveBeenCalledWith(jasmine.any(Function))
-        expect(p.then).toHaveBeenCalledWith(jasmine.any(Function))
+        expect(Closure.first).toHaveBeenCalled()
         expect(Cache.put).toHaveBeenCalledWith('key', 'data', 10)
         expect(Q.resolve).toHaveBeenCalledWith('data')
 
-        # now we assume the data have been stored so remember should
-        # return the data from cache
-        Q.promise = {then: (callback)-> callback('stored-data')}
-        p_found = {then: ->}
+    it 'returns remembered closure result', ->
+        Closure = found: -> 'data'
+        spyOn(Closure, 'found').and.callThrough()
+        spyOn(Q.promise, 'then').and.returnValue(true)
+        expect(Cache.remember('key', 10, Closure.found)).toBe(Q.promise)
+        expect(Closure.found).not.toHaveBeenCalled()
+        expect(Q.resolve).toHaveBeenCalledWith(yes)
 
-        spyOn(p_found, 'then')
+    it 'remembers - forever - executed code to be returned from cache when available', ->
+        Closure = first: -> 'data'
 
-        expect(Cache.remember('key', p_found)).toBe(Q.promise)
-        expect(p_found.then).not.toHaveBeenCalled()
-        expect(Q.resolve).toHaveBeenCalledWith('stored-data')
-
-    it 'forever remembers executed code to be returned from cache when available, otherwise hold the promise and store the results', ->
-        # execute first time assuming no data is stored (Q.promise.then returns null)
-        Q.promise = {then: (callback)-> callback(null)}
+        spyOn(Closure, 'first').and.callThrough()
+        spyOn(Cache, 'get').and.callThrough()
+        spyOn(Cache, 'has').and.callThrough()
+        spyOn(Cache, 'forever').and.callThrough()
         spyOn(Q.promise, 'then').and.callThrough()
 
-        p = {then: (callback)-> callback('data')}
-        spyOn(p, 'then').and.callThrough()
-
-        spyOn(Cache, 'get').and.callThrough()
-        spyOn(Cache, 'forever').and.callThrough()
-
-        Cache.rememberForever('key', p)
+        Cache.rememberForever('key', Closure.first)
 
         expect(Q.defer).toHaveBeenCalled()
-        expect(Cache.get).toHaveBeenCalledWith('key')
+        expect(Cache.has).toHaveBeenCalledWith('key')
         expect(Q.promise.then).toHaveBeenCalledWith(jasmine.any(Function))
-        expect(p.then).toHaveBeenCalledWith(jasmine.any(Function))
+        expect(Closure.first).toHaveBeenCalled()
         expect(Cache.forever).toHaveBeenCalledWith('key', 'data')
         expect(Q.resolve).toHaveBeenCalledWith('data')
 
-        # now we assume the data have been stored so remember should
-        # return the data from cache
-        Q.promise = {then: (callback)-> callback('stored-data')}
-        p_found = {then: ->}
+    it 'returns - forever - remembered closure result', ->
 
-        spyOn(p_found, 'then')
-
-        expect(Cache.remember('key', p_found)).toBe(Q.promise)
-        expect(p_found.then).not.toHaveBeenCalled()
-        expect(Q.resolve).toHaveBeenCalledWith('stored-data')
+        Closure = found: -> 'data'
+        spyOn(Closure, 'found').and.callThrough()
+        spyOn(Q.promise, 'then').and.returnValue(true)
+        expect(Cache.remember('key', Closure.found)).toBe(Q.promise)
+        expect(Closure.found).not.toHaveBeenCalled()
+        expect(Q.resolve).toHaveBeenCalledWith(yes)
 
     it 'increments an item value by the given count or defaults to 1', ->
         expect(Cache.increment('key')).toBe(Q.promise)
