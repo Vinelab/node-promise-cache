@@ -55,23 +55,48 @@ found.fail(function(why){
 Sometimes you may wish to perform a certain operation and store its results if the data you're looking for
 was not found in the cache. This can be achieved using `remember` or `rememberForever` methods.
 
+###### Simple use-case
+```javascript
+Cache.remember('some-key', 22, function(store){
+    data = 'do something to get the data';
+
+    store(data);
+});
+```
+
+###### Promise use-case
 ```javascript
 Http = require('promise-http').client;
 
-cached = Cache.remember('onetwo', 60, function(){
-    return Http.get('http://echo.jsontest.com/key/value/one/two')
+cached = Cache.remember('onetwo', 60, function(store){
+    request = Http.get('http://echo.jsontest.com/key/value/one/two')
+    request.then(function(response){
+        // store the JSON representation of the response.
+        store(JSON.prase(response));
+    });
 });
 
-// data will be remembered for 60 seconds and the request will be issued again afterwards.
+// data will be remembered for 60 seconds and the request will be issued
+// again when the time has elapsed.
 cached.then(function(data){
     console.log('do things with data');
 });
+```
 
-forever = Cache.rememberForever('threefour', function(){
-    return Http.get('http://echo.jsontest.com/key/value/three/four')
+The above example with `rememberForever` would store the data forever:
+
+```javascript
+Http = require('promise-http').client;
+
+forever = Cache.rememberForever('threefour', function(store){
+    request = Http.get('http://echo.jsontest.com/key/value/three/four')
+    request.then(function(response){
+        // store the JSON representation of the response.
+        store(JSON.parse(response));
+    });
 });
 
-// data will forever be stored (until hlushed or removed by someone else)
+// data will forever be stored (until flushed or removed by someone else)
 forever.then(function(data){
     console.log('do things with the data, again.');
 });
