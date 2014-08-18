@@ -32,22 +32,44 @@ Cache.get('key').then(function(result){
 });
 ```
 
-##### Remembering the results of a promise
+Since `Cache` works in promises then you may assign the operation to a variable and attach handlers to it:
 
-Sometimes you may wish to perform a certain operation if the data you're looking for
+```javascript
+found = Cache.get('key');
+
+found.then(function(value){
+    // do things with the value.
+});
+
+found.then(function(value){
+    // do something else with the value.
+});
+
+found.fail(function(why){
+    // something went wrong while fetching, see why.
+});
+```
+
+##### Remembering the results of a closure
+
+Sometimes you may wish to perform a certain operation and store its results if the data you're looking for
 was not found in the cache. This can be achieved using `remember` or `rememberForever` methods.
 
 ```javascript
-Http = require('promise-http').client();
+Http = require('promise-http').client;
 
-cached = Cache.remember('onetwo', 60, Http.get('http://echo.jsontest.com/key/value/one/two'));
+cached = Cache.remember('onetwo', 60, function(){
+    return Http.get('http://echo.jsontest.com/key/value/one/two')
+});
 
 // data will be remembered for 60 seconds and the request will be issued again afterwards.
 cached.then(function(data){
     console.log('do things with data');
 });
 
-forever = Cache.forever('threefour', Http.get('http://echo.jsontest.com/key/value/three/four'));
+forever = Cache.rememberForever('threefour', function(){
+    return Http.get('http://echo.jsontest.com/key/value/three/four')
+});
 
 // data will forever be stored (until hlushed or removed by someone else)
 forever.then(function(data){
@@ -55,10 +77,8 @@ forever.then(function(data){
 });
 ```
 
-> `remember` will attach a handler to the `then` of the passed promise and store the first argument passed in.
-
-As you can see regardless of the type of data we are storing, `promise-cache` will make sure to return just what you stored
-as you stored it, all data types are supported.
+As you can see, regardless of the type of data we are storing, `promise-cache` will make sure to return just what you stored
+preserving the data types for you - all data types are supported.
 
 ## Configuration
 
@@ -141,17 +161,17 @@ Store an item in the cache indefinitely.
 
 * **q.promise**
 
-### remember(key, promise)
+### remember(key, closure)
 
 Get an item from cache if it exists,
-otherwise execute and get the value from the promise.
+otherwise call `closure` and store the results.
 
 #### Params:
 
 * **mixed** *key*
-* **q.promise**
+* **function** **closure**
 
-### rememberForever(key, promise)
+### rememberForever(key, closure)
 
 Just like remember(), get an item from the cache
 or store the resulting value from the promise.
@@ -159,7 +179,7 @@ or store the resulting value from the promise.
 #### Params:
 
 * **mixed** *key*
-* **q.promise**
+* **function** *closure*
 
 ### has(key)
 
