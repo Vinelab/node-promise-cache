@@ -193,7 +193,7 @@ describe 'Cache', ->
         expect(Q.reject).toHaveBeenCalledWith(new Error('something happened'))
 
     it 'remembers executed code to be returned from cache when available', ->
-        Closure = first: -> 'data'
+        Closure = first: (done)-> done('data')
 
         spyOn(Closure, 'first').and.callThrough()
         spyOn(Cache, 'get').and.callThrough()
@@ -211,7 +211,7 @@ describe 'Cache', ->
         expect(Q.resolve).toHaveBeenCalledWith('data')
 
     it 'returns remembered closure result', ->
-        Closure = found: -> 'data'
+        Closure = found: (done)-> done('data')
         spyOn(Closure, 'found').and.callThrough()
         spyOn(Q.promise, 'then').and.returnValue(true)
         expect(Cache.remember('key', 10, Closure.found)).toBe(Q.promise)
@@ -219,7 +219,7 @@ describe 'Cache', ->
         expect(Q.resolve).toHaveBeenCalledWith(yes)
 
     it 'remembers - forever - executed code to be returned from cache when available', ->
-        Closure = first: -> 'data'
+        Closure = first: (done)-> done('data')
 
         spyOn(Closure, 'first').and.callThrough()
         spyOn(Cache, 'get').and.callThrough()
