@@ -144,7 +144,7 @@ class Cache
     get: (key)->
         dfd = @Q.defer()
 
-        @Manager.get @getCacheKey(key), (err, result)->
+        @Manager.get @getCacheKey(key), (err, result)=>
             return dfd.reject(err) if err
             # if there is no results
             # means the key doesn't exist in our cache
@@ -156,8 +156,7 @@ class Cache
             return dfd.resolve(num) if not isNaN(num)
 
             # get the cached data out of the mapped object
-            reduced = JSON.parse(result)._cached
-            dfd.resolve(reduced)
+            dfd.resolve(@parseResult(result))
 
         return dfd.promise
 
@@ -212,6 +211,21 @@ class Cache
             return dfd.reject(err) if err
             dfd.resolve(result)
         return dfd.promise
+
+    ###
+    # Parse result from the cache store.
+    #
+    # @param {mixed} result
+    # @return {mixed}
+    ###
+    parseResult: (result)->
+        try
+            parsed = JSON.parse(result)
+            parsed = parsed._cached if parsed?._cached?
+        catch e
+            parsed = result
+
+        return parsed
 
 # Export class to allow extendability.
 module.exports.klass = Cache
