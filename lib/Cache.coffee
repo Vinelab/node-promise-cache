@@ -19,11 +19,13 @@ class Cache
      # @return string
     ###
     getCacheKey: (key)=>
-        return "#{@prefix}:#{key}" if typeof key is 'string'
+        if not @prefix or @prefix.length <= 0
+            return key
+        else
+            return "#{@prefix}:#{key}" if typeof key is 'string'
 
-        hash = @Crypto.createHash('md5')
-        .update(JSON.stringify({_key: key})).digest('hex')
-        return "#{@prefix}:#{hash}"
+            hash = @Crypto.createHash('md5').update(JSON.stringify({_key: key})).digest('hex')
+            return "#{@prefix}:#{hash}"
 
     ###
     # Store an item in the cache for a given number of seconds.

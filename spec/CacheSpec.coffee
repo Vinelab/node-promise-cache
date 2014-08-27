@@ -62,6 +62,17 @@ describe 'Cache', ->
         expect(Cache.getCacheKey('something')).toBe("#{Cache.prefix}:something")
         expect(Crypto.createHash).not.toHaveBeenCalled()
 
+    it 'generates cache store key with null prefix', ->
+        Cache.prefix = null
+        expect(Cache.getCacheKey('somekey')).toBe('somekey')
+        expect(Crypto.createHash).not.toHaveBeenCalled()
+
+    it 'generates cache store key with empty prefix', ->
+        Cache.prefix = ''
+        expect(Cache.getCacheKey('keyss')).toBe('keyss')
+        expect(Crypto.createHash).not.toHaveBeenCalled()
+
+
     it 'generates cache store keys with "object" key data type using hashing', ->
         key = {id: 1}
         expect(Cache.getCacheKey(key)).not.toBeNull()
