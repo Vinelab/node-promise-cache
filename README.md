@@ -19,7 +19,7 @@ This code is assumed existing in all of the upcoming examples.
 ##### Storing items in the cache
 
 ```javascript
-Cache.put('key', 'value' 20); // will be stored for 20 seconds.
+Cache.put('key', 'value', 20); // will be stored for 20 seconds.
 
 Cache.forever('other', 'thing'); // will be stored indefinitely
 ```
