@@ -148,22 +148,18 @@ module.exports.instance = (pool, config = {})->
     return new Store(pool) if pool?
 
     # Setup configuration.
-    config = extend(yes, {
-        redis:
-            host: '127.0.0.1',
-            port: 6379
-            pool: {max: 1, min: 1}
-    }, config)
+    redisSettings = extend(true, {
+        host: '127.0.0.1'
+        port: 6379
+    }, config.redis)
+    poolSettings = extend(true, {
+        max: 1
+        min: 1
+    }, config.redis.pool)
+    pool = new RedisPool(redisSettings, poolSettings)
 
     # Create the redis pool.
     RedisPool = require('sol-redis-pool')
     # Prepare and return the pool.
-    pool = new RedisPool({
-        host: config.redis.host
-        port: config.redis.port
-    }, {
-        max: config.redis.pool.max
-        min: config.redis.pool.minutes
-    })
-
+    pool = new RedisPool(redisSettings, poolSettings)
     return new Store(pool)
