@@ -156,7 +156,6 @@ module.exports.instance = (pool, config = {})->
         max: 1
         min: 1
     }, config.redis.pool)
-    pool = new RedisPool(redisSettings, poolSettings)
 
     # Create the redis pool.
     RedisPool = require('sol-redis-pool')
