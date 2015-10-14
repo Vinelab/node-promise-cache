@@ -108,7 +108,7 @@ preserving the data types for you - all data types are supported.
 ## Configuration
 
 You may configure the redis store or specify another store you have built yourself.
-This package uses [redis-pool](https://www.npmjs.org/package/sol-redis-pool) to manage Redis connections.
+This package uses [redis-pool](https://www.npmjs.org/package/sol-redis-pool) to manage Redis connections. The object passed to the `redis` property will be used as the settings for the [`RedisPool` constructor](https://www.npmjs.com/package/sol-redis-pool#constructor-redispool-redis-settings-pool-settings).
 
 > The values listed below are the defaults.
 
